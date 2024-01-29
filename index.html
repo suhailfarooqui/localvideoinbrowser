@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Multiple Video Player</title>
+  <script src="https://kit.fontawesome.com/c3d814d676.js" crossorigin="anonymous"></script>
+  <style>
+    .grid-container {
+  display: grid;
+  
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  margin-bottom: 0%;
+}
+
+body{
+  margin: 0;
+  padding: 0;
+}
+.video-item {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+}
+
+.video-item video {
+  width: 100%;
+  height: auto;
+}
+#preview{
+  width: 50vw;
+  /* border-radius: 15px; */
+  /* height: 400px; */
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%,0%);
+  /* border: 2px solid red; */
+  opacity: 0;
+  position:fixed;
+}
+.text{
+  font-size: 400%;
+  font-family:'Times New Roman', Times, serif;
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  /* margin-bottom: 30px; */
+  border-bottom: 1px solid #aaa;
+    background: linear-gradient(#fff, #ddd);
+    color: rgb(49, 128, 198);
+}
+.text1{
+  font-size: 200%;
+  display: flex;
+  justify-content: center;
+  margin-left: 20px;
+  margin-right: 20px;
+  color: #fff;
+  /* margin-top: 20px; */
+  padding-top: 20px;
+  text-align: center;
+  
+  
+}
+#fileInput{
+  display: flex;
+  justify-content: center;
+  scale: 1.8;
+  padding-top: 20px;
+  /* background-color: black; */
+  font-size: 10px;
+  color: color(from color srgb r g b);
+}
+.pagecnt{
+  background: linear-gradient(#999,#555);
+  /* background-color: #aaa; */
+  height: 70vh;
+}
+  </style>
+</head>
+<body>
+  <div class="text" id="txt">Welcome</div>
+  
+  <div class="pagecnt" id="pagecontainer">
+  <div class="text1">This site is made to watch your loveble media in one window</div>
+  <div class="text1"><p>Select your videos files and play them all in one browser. You can also preveiw them in a new preview pane by just hovering over the video of your choice</p></div>
+</div>
+<div id="preview"></div>
+
+<div id="videoGrid" class="grid-container"></div>
+<div style="display: flex;justify-content: center;color: aqua;font-size: 300%;"><input type="file" id="fileInput" multiple accept="video/*"></div>
+  <script>
+    const fileInput = document.getElementById('fileInput');
+const videoGrid = document.getElementById('videoGrid');
+var preview=document.getElementById("preview")
+fileInput.addEventListener('change', handleFileSelect);
+
+
+let x=0;
+
+  
+function handleFileSelect(event) {
+  const files = event.target.files;
+
+  const txt= document.getElementById("txt");
+      txt.remove();
+      const pagecontainer=document.getElementById("pagecontainer")
+      pagecontainer.remove();
+
+  for (const file of files) {
+    if (file.type.startsWith('video/')) {
+      const videoItem = document.createElement('div');
+     
+       
+      videoItem.className = 'video-item';
+      
+      
+      const video = document.createElement('video');
+      const video2 = document.createElement('video');
+      
+      video.controls = true;
+      video2.controls = true;
+      video.autoplay=true;
+      video.muted=true;
+      video2.autoplay=true;
+      video2.style.width="100%"
+      video2.style.borderRadius="15px"
+      video.onmouseenter=function(file){
+        video2.currentTime=video.currentTime;
+        preview.style.opacity=1;
+       preview.appendChild(video2);
+        preview.style.zIndex=2;
+        video2.play();
+        video2.muted=false
+        
+      }
+      video.onmouseleave=function(){
+        
+        preview.style.opacity=0;
+        preview.removeChild(video2);
+        
+        preview.style.zIndex=1
+        video2.muted=true
+
+      }
+      
+      video2.onclick=function(file){
+        
+       myrotatefnc(file);
+      }
+      video2.onmouseenter=function(file){
+        video2.currentTime=video.currentTime;
+        preview.style.opacity=1;
+       preview.appendChild(video2);
+        preview.style.zIndex=2;
+        video2.play();
+        video2.muted=false
+        function myfnc(){
+  video2.style.rotateY=("180deg")
+}
+        
+      }
+      video2.onmouseleave=function(){
+        
+        preview.style.opacity=0;
+        preview.removeChild(video2);
+        
+        preview.style.zIndex=1
+        video2.muted=true
+        
+      }
+      
+      
+      video.src = URL.createObjectURL(file);
+      video2.src = URL.createObjectURL(file);
+      
+      videoItem.appendChild(video);
+      videoGrid.appendChild(videoItem);
+    }
+  }
+}
+
+
+  </script>
+</body>
+</html>
